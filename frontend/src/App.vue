@@ -1,18 +1,11 @@
 <template>
-  <div id="app">
-    <h1>Pickup Service</h1>
-    <router-view></router-view>
-  </div>
+  <router-view />
 </template>
 
 <script setup>
-// Global app logic can go here
+// Root component
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
+/* Global styles */
 </style>

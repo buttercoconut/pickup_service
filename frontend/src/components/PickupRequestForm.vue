@@ -1,59 +1,71 @@
 <template>
-  <div class="pickup-form">
-    <h2>Request a Pickup</h2>
+  <div class="pickup-request-form">
+    <h2>픽업 요청</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
-        <label for="name">Name</label>
-        <input v-model="form.name" id="name" type="text" required />
+        <label for="customerName">이름</label>
+        <input type="text" id="customerName" v-model="form.customerName" required />
       </div>
       <div class="form-group">
-        <label for="address">Address</label>
-        <input v-model="form.address" id="address" type="text" required />
+        <label for="contact">연락처</label>
+        <input type="tel" id="contact" v-model="form.contact" required />
       </div>
       <div class="form-group">
-        <label for="date">Pickup Date</label>
-        <input v-model="form.date" id="date" type="date" required />
+        <label for="address">주소</label>
+        <input type="text" id="address" v-model="form.address" required />
       </div>
       <div class="form-group">
-        <label for="time">Pickup Time</label>
-        <input v-model="form.time" id="time" type="time" required />
+        <label for="pickupTime">픽업 예정 시간</label>
+        <input type="datetime-local" id="pickupTime" v-model="form.pickupTime" required />
       </div>
       <div class="form-group">
-        <label for="items">Items</label>
-        <textarea v-model="form.items" id="items" rows="3" required></textarea>
+        <label for="itemDescription">물품 설명</label>
+        <textarea id="itemDescription" v-model="form.itemDescription" required></textarea>
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit">제출</button>
     </form>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import axios from 'axios'
+import { reactive } from 'vue';
+import axios from 'axios';
 
 const form = reactive({
-  name: '',
+  customerName: '',
+  contact: '',
   address: '',
-  date: '',
-  time: '',
-  items: ''
-})
+  pickupTime: '',
+  itemDescription: '',
+});
 
 const submitForm = async () => {
   try {
-    const response = await axios.post('/api/pickup', form)
-    alert('Pickup requested successfully! Reference ID: ' + response.data.id)
-    Object.assign(form, { name: '', address: '', date: '', time: '', items: '' })
+    const payload = {
+      customer_name: form.customerName,
+      contact: form.contact,
+      address: form.address,
+      pickup_time: form.pickupTime,
+      item_description: form.itemDescription,
+    };
+    const response = await axios.post('/api/pickup-requests', payload);
+    alert('픽업 요청이 접수되었습니다! ID: ' + response.data.id);
+    // reset form
+    form.customerName = '';
+    form.contact = '';
+    form.address = '';
+    form.pickupTime = '';
+    form.itemDescription = '';
   } catch (error) {
-    console.error(error)
-    alert('Failed to request pickup. Please try again.')
+    console.error(error);
+    alert('픽업 요청 제출 중 오류가 발생했습니다.');
   }
-}
+};
 </script>
 
 <style scoped>
-.pickup-form {
-  max-width: 500px;
+.pickup-request-form {
+  max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
   border: 1px solid #ccc;
